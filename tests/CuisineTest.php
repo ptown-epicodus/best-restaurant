@@ -23,14 +23,14 @@ class CuisineTest extends PHPUnit_Framework_TestCase
     {
         //Arrange
         $name = 'Mexican';
-        $id = 1;
-        $test_Cuisine = new Cuisine($name, $id);
+        $test_Cuisine = new Cuisine($name);
+        $test_Cuisine->save();
 
         //Act
         $result = $test_Cuisine->getId();
 
         //Assert
-        $this->assertEquals(1, $result);
+        $this->assertEquals(true, is_numeric($result));
     }
 
     function test_getName()
