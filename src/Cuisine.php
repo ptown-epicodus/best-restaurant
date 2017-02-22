@@ -15,6 +15,11 @@ class Cuisine
         return $this->name;
     }
 
+    function setName($new_name)
+    {
+        $this->name = $new_name;
+    }
+
     function getId()
     {
         return $this->id;
@@ -24,6 +29,17 @@ class Cuisine
     {
         $GLOBALS['DB']->exec("INSERT INTO cuisines (name) VALUES ('{$this->getName()}');");
         $this->id = $GLOBALS['DB']->lastInsertId();
+    }
+
+    function update($new_name)
+    {
+        $GLOBALS['DB']->exec("UPDATE cuisines SET name = '{$new_name}' WHERE id = {$this->getId()};");
+        $this->setName($new_name);
+    }
+
+    function delete()
+    {
+        $GLOBALS['DB']->exec("DELETE FROM cuisines WHERE id = {$this->getId()};");
     }
 
     static function getAll()

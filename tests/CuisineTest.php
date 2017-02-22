@@ -110,5 +110,38 @@ class CuisineTest extends PHPUnit_Framework_TestCase
         $this->assertEquals($test_Cuisine, $result);
     }
 
+    function testUpdate()
+    {
+        //Arrange
+        $name = 'Mexican';
+        $test_Cuisine = new Cuisine($name);
+        $test_Cuisine->save();
+
+        $new_name = 'Chinese';
+
+        //Act
+        $test_Cuisine->update($new_name);
+
+        //Assert
+        $this->assertEquals('Chinese', $test_Cuisine->getName());
+    }
+
+    function testDelete()
+    {
+        //Arrange
+        $name1 = 'Mexican';
+        $test_Cuisine1 = new Cuisine($name1);
+        $test_Cuisine1->save();
+
+        $name2 = 'Chinese';
+        $test_Cuisine2 = new Cuisine($name2);
+        $test_Cuisine2->save();
+
+        //Act
+        $test_Cuisine1->delete();
+
+        //Assert
+        $this->assertEquals([$test_Cuisine2], Cuisine::getAll());
+    }
 }
 ?>
