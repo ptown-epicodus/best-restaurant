@@ -20,6 +20,11 @@ class Restaurant
         return $this->name;
     }
 
+    function setName($new_name)
+    {
+        $this->name = $new_name;
+    }
+
     function getCuisineId()
     {
         return $this->cuisine_id;
@@ -36,18 +41,17 @@ class Restaurant
         $this->id = $GLOBALS['DB']->lastInsertId();
     }
 
-    static function find($search_id)
+    function update($new_name)
     {
-        $return_restaurant = null;
-        $results = Restaurant::getAll();
-        foreach ($results as $result) {
-            $restaurant_id = $result->getId();
-            if ($restaurant_id == $search_id) {
-                $return_restaurant = $result;
-            }
-        }
-        return $return_restaurant;
+        $GLOBALS['DB']->exec("UPDATE restaurants SET name = '{$new_name}' WHERE id = {$this->getId()};");
+        $this->setName($new_name);
     }
+
+    function delete()
+    {
+        $GLOBALS['DB']->exec("DELETE FROM restaurants WHERE id = {$this->getId()};");
+    }
+
 
     static function getAll()
     {
@@ -67,6 +71,19 @@ class Restaurant
     static function deleteAll()
     {
         $GLOBALS['DB']->exec('DELETE FROM restaurants;');
+    }
+
+    static function find($search_id)
+    {
+        $return_restaurant = null;
+        $results = Restaurant::getAll();
+        foreach ($results as $result) {
+            $restaurant_id = $result->getId();
+            if ($restaurant_id == $search_id) {
+                $return_restaurant = $result;
+            }
+        }
+        return $return_restaurant;
     }
 }
 
