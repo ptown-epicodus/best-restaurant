@@ -15,6 +15,9 @@ $username = 'root';
 $password = 'root';
 $DB = new PDO($server, $username, $password);
 
+use Symfony\Component\HttpFoundation\Request;
+Request::enableHttpMethodParameterOverride();
+
 $app->get('/', function() use ($app) {
     $cuisines = Cuisine::getAll();
 
@@ -29,9 +32,26 @@ $app->post('/cuisines', function() use ($app) {
     return $app->redirect('/');
 });
 
+$app->post('/delete_cuisines', function() use ($app) {
+    Cuisine::deleteAll();
+    return $app->redirect('/');
+});
+
 $app->get('/cuisines/{id}', function($id) use ($app) {
     $cuisine = Cuisine::find($id);
     return $app['twig']->render('cuisine.html.twig', array('cuisine' => $cuisine));
+});
+
+$app->get('/cuisines/{id}/edit', function($id) use ($app) {
+    $cuisine = Cuisine::find($id);
+    return $app['twig']->render('cuisine_edit.html.twig', array('cuisine' => $cuisine));
+});
+
+$app->patch('/cuisines/{id}', function($id) use ($app) {
+    $name = $_POST['name'];
+    $cuisine = Cuisine::find($id);
+    $cuisine->update($name);
+    return  $app->redirect("/cuisines/{$id}");
 });
 
 $app->post('/add_restaurant', function() use ($app) {
@@ -44,6 +64,12 @@ $app->post('/add_restaurant', function() use ($app) {
     $cuisine = Cuisine::find($cuisine_id);
 
     return $app['twig']->render('restaurant.html.twig', array('restaurants' => $restaurants, 'cuisine' => $cuisine));
+});
+
+$app->delete('/cuisines/{id}', function($id) use ($app) {
+    $cuisine = Cuisine::find($id);
+    $cuisine->delete();
+    return $app->redirect('/');
 });
 
 return $app;
