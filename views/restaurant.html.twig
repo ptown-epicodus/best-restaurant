@@ -1,0 +1,8 @@
+{% extends 'root.html.twig' %}
+
+{% block content %}
+    <h2>{{ restaurant.getName }}</h2>
+    <h3>{{ cuisine.getName }}</h3>
+    <p><a href='/restaurants/{{ restaurant.getId }}/edit'>Edit this restaurant</a></p>
+    <p><a href='/'>Back</a></p>
+{% endblock %}

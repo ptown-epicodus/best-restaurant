@@ -54,22 +54,51 @@ $app->patch('/cuisines/{id}', function($id) use ($app) {
     return  $app->redirect("/cuisines/{$id}");
 });
 
-$app->post('/add_restaurant', function() use ($app) {
+$app->post('/restaurants', function() use ($app) {
     $name = $_POST['name'];
     $cuisine_id = $_POST['cuisine'];
 
     $new_restaurant = new Restaurant($name, $cuisine_id);
     $new_restaurant->save();
-    $restaurants = Restaurant::getAll();
     $cuisine = Cuisine::find($cuisine_id);
 
-    return $app['twig']->render('restaurant.html.twig', array('restaurants' => $restaurants, 'cuisine' => $cuisine));
+    return $app['twig']->render('restaurant.html.twig', array('restaurant' => $new_restaurant, 'cuisine' => $cuisine));
 });
 
 $app->delete('/cuisines/{id}', function($id) use ($app) {
     $cuisine = Cuisine::find($id);
     $cuisine->delete();
     return $app->redirect('/');
+});
+
+$app->patch('restaurants/{id}', function($id) use ($app) {
+    $name = $_POST['name'];
+    $restaurant = Restaurant::find($id);
+    $restaurant->update($name);
+    return $app->redirect("/restaurants/{$id}");
+});
+
+$app->get('/restaurants/{id}/edit', function($id) use ($app) {
+    $restaurant = Restaurant::find($id);
+    return $app['twig']->render('restaurant_edit.html.twig', array('restaurant' => $restaurant));
+});
+
+$app->get('/restaurants/{id}', function($id) use ($app) {
+    $restaurant = Restaurant::find($id);
+    $cuisine = Cuisine::find($restaurant->getCuisineId());
+    return $app['twig']->render('restaurant.html.twig', array('restaurant' => $restaurant, 'cuisine' => $cuisine ));
+});
+
+$app->delete('/restaurants/{id}', function($id) use ($app) {
+    $restaurant = Restaurant::find($id);
+    $restaurant->delete();
+    return $app->redirect('/restaurants');
+});
+
+$app->get('/restaurants', function() use ($app) {
+    $restaurants = Restaurant::getAll();
+    $cuisines = Cuisine::getAll();
+    return $app['twig']->render('restaurants.html.twig', array('restaurants' => $restaurants, 'cuisines' => $cuisines ));
 });
 
 return $app;

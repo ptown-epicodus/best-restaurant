@@ -1,0 +1,27 @@
+{% extends 'root.html.twig' %}
+
+{% block content %}
+    {% if restaurants is not empty %}
+        {% for restaurant in restaurants %}
+            {{ restaurant.getName }}
+            <p><a href='/restaurants/{{ restaurant.getId }}/edit'>Edit this restaurant</a></p>
+        {% endfor %}
+    {% else %}
+        <p>There are no restaurants in the database.</p>
+    {% endif %}
+
+    <form action='/restaurants' method='post'>
+        <label for='name'>Name:</label>
+        <input id='name' name='name' type='text'>
+
+        <select name='cuisine'>
+            {% for cuisine in cuisines %}
+                <option value={{ cuisine.getId }}>{{ cuisine.getName }}</option>
+            {% endfor %}
+        </select>
+
+        <button type='submit'>Add</button>
+    </form>
+
+    <p><a href='/'>Back</a></p>
+{% endblock %}
