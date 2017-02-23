@@ -42,6 +42,20 @@ class Cuisine
         $GLOBALS['DB']->exec("DELETE FROM cuisines WHERE id = {$this->getId()};");
     }
 
+    function getRestaurants()
+    {
+        $restaurants = array();
+        $returned_restaurants = $GLOBALS['DB']->query("SELECT * FROM restaurants WHERE cuisine_id = {$this->getId()};");
+        foreach ($returned_restaurants as $restaurant) {
+            $name = $restaurant['name'];
+            $cuisine_id = $restaurant['cuisine_id'];
+            $id = $restaurant['id'];
+            $new_restaurant = new Restaurant($name, $cuisine_id, $id);
+            array_push($restaurants, $new_restaurant);
+        }
+        return $restaurants;
+    }
+
     static function getAll()
     {
         $returned_cuisines = $GLOBALS['DB']->query('SELECT * FROM cuisines;');

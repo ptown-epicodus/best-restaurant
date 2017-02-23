@@ -143,5 +143,34 @@ class CuisineTest extends PHPUnit_Framework_TestCase
         //Assert
         $this->assertEquals([$test_Cuisine2], Cuisine::getAll());
     }
+
+    function test_getRestaurants()
+    {
+        $name = 'Mexican';
+        $test_Cuisine = new Cuisine($name);
+        $test_Cuisine->save();
+        $test_c_id = $test_Cuisine->getId();
+
+        $name2 = 'Chinese';
+        $test_Cuisine2 = new Cuisine($name2);
+        $test_Cuisine2->save();
+        $test_c_id2 = $test_Cuisine2->getId();
+
+        $restaurant = 'Cheddars';
+        $test_restaurant = new Restaurant($restaurant, $test_c_id);
+        $test_restaurant->save();
+
+        $restaurant2 = 'Red Robin';
+        $test_restaurant2 = new Restaurant($restaurant, $test_c_id);
+        $test_restaurant2->save();
+
+        $restaurant3 = 'Subway';
+        $test_restaurant3 = new Restaurant($restaurant3, $test_c_id2);
+        $test_restaurant3->save();
+
+        $result = $test_Cuisine->getRestaurants();
+
+        $this->assertEquals([$test_restaurant, $test_restaurant2], $result);
+    }
 }
 ?>
